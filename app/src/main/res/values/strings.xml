@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AutoOpenWhatsApp</string>
+    <string name="accessibility_service_description">Servicio de accesibilidad para abrir WhatsApp</string>
+
+</resources>
