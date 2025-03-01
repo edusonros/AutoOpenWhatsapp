@@ -1,19 +1,44 @@
 package com.example.autoopenwhatsapp
 
 import android.accessibilityservice.AccessibilityService
-import android.accessibilityservice.AccessibilityEvent
+import android.view.accessibility.AccessibilityEvent
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.os.PowerManager
 import android.widget.Toast
 
 class MyAccessibilityService : AccessibilityService() {
 
-    override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        if (event?.packageName.toString() == "com.whatsapp" &&
-            event.eventType == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED) {
+    private val handler = Handler(Looper.getMainLooper())
+    private val checkInterval: Long = 30000 // Revisar cada 30 segundos
 
-            wakeUpScreen()
-            showMessage()
+    override fun onServiceConnected() {
+        super.onServiceConnected()
+        startCheckingMessages()
+    }
+
+    private fun startCheckingMessages() {
+        handler.postDelayed(object : Runnable {
+            override fun run() {
+                checkForWhatsAppMessages()
+                handler.postDelayed(this, checkInterval)
+            }
+        }, checkInterval)
+    }
+
+    private fun checkForWhatsAppMessages() {
+        showMessage()
+        wakeUpScreen()
+    }
+
+    override fun onAccessibilityEvent(event: AccessibilityEvent?) {
+        event?.let {
+            if (it.packageName?.toString() == "com.whatsapp" &&
+                it.eventType == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED) {
+                wakeUpScreen()
+                showMessage()
+            }
         }
     }
 
@@ -25,7 +50,7 @@ class MyAccessibilityService : AccessibilityService() {
             PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
             "MyApp::MyWakelockTag"
         )
-        wakeLock.acquire(3000) // Mantener la pantalla encendida por 3 segundos
+        wakeLock.acquire(3000)
         wakeLock.release()
     }
 
