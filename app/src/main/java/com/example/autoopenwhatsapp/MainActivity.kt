@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
                 startService(serviceIntent)
             }
         }
-
+        // El evento de salir//
         stopButton.setOnClickListener {
             stopService(serviceIntent)
         }
