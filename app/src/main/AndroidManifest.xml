@@ -1,19 +1,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.autoopenwhatsapp">
 
+    <!-- Permisos necesarios -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE"/>
 
     <application
         android:allowBackup="true"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
 
-        <!-- ACTIVIDAD PRINCIPAL -->
+        <!-- Actividad principal -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -23,7 +25,7 @@
             </intent-filter>
         </activity>
 
-        <!-- SERVICIO DE ACCESIBILIDAD -->
+        <!-- Servicio de accesibilidad para detectar notificaciones -->
         <service
             android:name=".MyAccessibilityService"
             android:exported="true"
@@ -36,13 +38,13 @@
                 android:resource="@xml/accessibility_service_config" />
         </service>
 
-        <!-- SERVICIO FOREGROUND -->
+        <!-- Servicio en primer plano -->
         <service
-            android:name=".WhatsAppMonitorService"
+            android:name=".BackgroundService"
             android:foregroundServiceType="dataSync"
             android:exported="false"/>
 
-        <!-- RECEIVER PARA INICIO AUTOMÁTICO -->
+        <!-- Receiver para ejecutar la app al reiniciar el dispositivo -->
         <receiver
             android:name=".BootReceiver"
             android:exported="false">
